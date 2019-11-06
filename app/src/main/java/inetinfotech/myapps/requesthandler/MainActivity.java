@@ -1,9 +1,12 @@
 package inetinfotech.myapps.requesthandler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,12 +39,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Bitmap bitmap;
 
     private Uri filePath;
-
+    public static final int RequestPermissionCode = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+EnableRuntimePermission();
         buttonChoose = (Button) findViewById(R.id.buttonChoose);
         buttonUpload = (Button) findViewById(R.id.buttonUpload);
         buttonView = (Button) findViewById(R.id.buttonViewImage);
@@ -131,6 +134,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             uploadImage();
         }
 
+    }
+    public void EnableRuntimePermission() {
+
+
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+// Toast.makeText(Cpature_image.this,"CAMERA permission allows us to Access CAMERA app", Toast.LENGTH_LONG).show();
+
+        } else {
+
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.SEND_SMS,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, RequestPermissionCode);
+
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int RC, String per[], int[] PResult) {
+
+        switch (RC) {
+
+            case RequestPermissionCode:
+
+                if (PResult.length > 0 && PResult[0] == PackageManager.PERMISSION_GRANTED) {
+
+// Toast.makeText(Cpature_image.this,"Permission Granted, Now your application can access CAMERA.", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    Toast.makeText(this, "Permission Canceled, Now your application cannot access CAMERA.", Toast.LENGTH_LONG).show();
+
+                }
+                break;
+        }
     }
 
 }
